@@ -1,45 +1,21 @@
 module.exports = function check(str, bracketsConfig) {
   let strArray = str.split('');
-  let result = false;
-  function checkString() {
-    for (let i = 0; i < bracketsConfig.length; i++) {
-      let centre = bracketsConfig[i].join('');
-      let firstBrasket = str.indexOf(centre, 0);
-      if(str.indexOf(centre, 0) != -1){
-        let indexStart = str.indexOf(centre, 0);
-        let indexEnd =  str.indexOf(bracketsConfig[i][1], indexStart);
+  let strBracket = bracketsConfig.flat().join("");
+  let result = true;
 
-        if(str.length != (indexStart+1)*2){
+  strArray.forEach(function callback(currentValue, index, array) {
 
-          str = str.slice((indexStart+1)*2);
-          checkString(str, bracketsConfig);
+    let firstElem = strArray.shift();
+    let arrayBracket = strBracket.indexOf(firstElem, 0);
 
-        } else if(!(indexStart+indexEnd)%2 == 0){
-          checkBrasket(str, bracketsConfig);
+    if(strArray.indexOf(strBracket[arrayBracket+1]) != -1 && strArray.indexOf(strBracket[arrayBracket+1])%2 == 0){
+      delete strArray[strArray.indexOf(strBracket[arrayBracket+1])];
+    }else{
 
-        }
-
-      }else {
-        result = false;
-      }
+    return result = false;
     }
-  }
-  function checkBrasket(str, bracketsConfig) {
-  let checkArray = [];
-    for (let a = 0; a < str.length/2; a++) {
-      for (let i = 0; i < bracketsConfig.length; i++) {
-       if (bracketsConfig[i][0] == str[a]){
-      checkArray.push(bracketsConfig[i][1]);
-      }
-    }
-  }
-  let stringCheak = str.slice(0, str.length/2) + checkArray.reverse().join("");
-  if(str == stringCheak){
-    result = true;
-  }else{
-    result = false;
-  }
-  }
-  checkString();
+  });
+
+
   return result;
 }
